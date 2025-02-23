@@ -81,8 +81,21 @@ function removeProperties(obj, keys) {
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 2}) => true
  *    compareObjects({a: 1, b: 2}, {a: 1, b: 3}) => false
  */
-function compareObjects(/* obj1, obj2 */) {
-  throw new Error('Not implemented');
+function compareObjects(obj1, obj2) {
+  let answer = true;
+  Object.entries(obj1).forEach(([key, value]) => {
+    if (obj2[key]) {
+      if (obj2[key] !== value) {
+        answer = false;
+        return answer;
+      }
+    } else {
+      answer = false;
+      return answer;
+    }
+    return answer;
+  });
+  return answer;
 }
 
 /**
@@ -96,8 +109,8 @@ function compareObjects(/* obj1, obj2 */) {
  *    isEmptyObject({}) => true
  *    isEmptyObject({a: 1}) => false
  */
-function isEmptyObject(/* obj */) {
-  throw new Error('Not implemented');
+function isEmptyObject(obj) {
+  return Object.keys(obj).length === 0;
 }
 
 /**
@@ -116,8 +129,8 @@ function isEmptyObject(/* obj */) {
  *    immutableObj.newProp = 'new';
  *    console.log(immutableObj) => {a: 1, b: 2}
  */
-function makeImmutable(/* obj */) {
-  throw new Error('Not implemented');
+function makeImmutable(obj) {
+  return Object.freeze(obj);
 }
 
 /**
@@ -130,8 +143,14 @@ function makeImmutable(/* obj */) {
  *    makeWord({ a: [0, 1], b: [2, 3], c: [4, 5] }) => 'aabbcc'
  *    makeWord({ H:[0], e: [1], l: [2, 3, 8], o: [4, 6], W:[5], r:[7], d:[9]}) => 'HelloWorld'
  */
-function makeWord(/* lettersObject */) {
-  throw new Error('Not implemented');
+function makeWord(lettersObject) {
+  const word = [];
+  Object.entries(lettersObject).forEach(([key, value]) => {
+    for (let i = 0; i < value.length; i += 1) {
+      word[value[i]] = key;
+    }
+  });
+  return word.join('');
 }
 
 /**
@@ -148,8 +167,37 @@ function makeWord(/* lettersObject */) {
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  const change = {
+    25: 0,
+    50: 0,
+    100: 0,
+  };
+  let canOrNot = true;
+  for (let i = 0; i < queue.length; i += 1) {
+    if (queue[i] === 25) {
+      change[25] += 1;
+    }
+    if (queue[i] === 50 && change[25] > 0) {
+      change[25] -= 1;
+      change[50] += 1;
+    } else if (queue[i] !== 25 && queue[i] !== 100) {
+      canOrNot = false;
+    }
+    if (queue[i] === 100) {
+      if (change[50] > 0 && change[25] > 0) {
+        change[25] -= 1;
+        change[50] -= 1;
+        change[100] += 1;
+      } else if (change[25] > 2) {
+        change[25] -= 3;
+        change[100] += 1;
+      } else {
+        canOrNot = false;
+      }
+    }
+  }
+  return canOrNot;
 }
 
 /**
